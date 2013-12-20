@@ -43,15 +43,17 @@ public class Numerals {
 
     private static String WHOLE = "целых";
 
+    private static String ZERO = "ноль";
+    
     private static HashMap<Gender, String[]> ONES = new HashMap<Gender, String[]>() {
         {
-            put(Gender.M, new String[] { "ноль", "один", "два", "три", "четыре", "пять", "шесть", "семь", "восемь",
+            put(Gender.M, new String[] { "", "один", "два", "три", "четыре", "пять", "шесть", "семь", "восемь",
                     "девять" });
-            put(Gender.F, new String[] { "ноль", "одна", "две", "три", "четыре", "пять", "шесть", "семь", "восемь",
+            put(Gender.F, new String[] { "", "одна", "две", "три", "четыре", "пять", "шесть", "семь", "восемь",
                     "девять" });
-            put(Gender.N, new String[] { "ноль", "одно", "два", "три", "четыре", "пять", "шесть", "семь", "восемь",
+            put(Gender.N, new String[] { "", "одно", "два", "три", "четыре", "пять", "шесть", "семь", "восемь",
                     "девять" });
-            put(Gender.D, new String[] { "ноль", "одни", "двое", "трое", "четверо", "пятеро", "шестеро", "семеро",
+            put(Gender.D, new String[] { "", "одни", "двое", "трое", "четверо", "пятеро", "шестеро", "семеро",
                     "восемь", "девять" });
         }
     };
@@ -125,7 +127,7 @@ public class Numerals {
         ArrayList<String> res = new ArrayList<>();
 
         if (wh.get(0).equals("0")) {
-            res.add(ONES.get(genderWh)[0]);
+            res.add(ZERO);
 
             if (genderFr == null) {
                 String whole = morph(0, pluralsWh);
@@ -252,9 +254,6 @@ public class Numerals {
         return sb.toString();
     }
 
-    /**
-     * Склоняем словоформу
-     */
     public static String morph(long count, String... pl) {
         if ((count % 10 == 1) && (count % 100 != 11)) {
             return pl[0];
