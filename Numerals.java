@@ -3,6 +3,10 @@ import java.util.Collections;
 import java.util.HashMap;
 import java.math.BigDecimal;
 
+/**
+ * Класс для работы с числами
+ * 
+ */
 public class Numerals {
     private Gender genderWh;
 
@@ -44,7 +48,7 @@ public class Numerals {
     private static String WHOLE = "целых";
 
     private static String ZERO = "ноль";
-    
+
     private static HashMap<Gender, String[]> ONES = new HashMap<Gender, String[]>() {
         {
             put(Gender.M, new String[] { "", "один", "два", "три", "четыре", "пять", "шесть", "семь", "восемь",
@@ -61,8 +65,8 @@ public class Numerals {
     private static String[] HUNDREDS = { "сто", "двести", "триста", "четыреста", "пятьсот", "шестьсот", "семьсот",
             "восемьсот", "девятьсот" };
 
-    private static String[] TEENS = { "десять", "одиннадцать", "двенадцать", "тринадцать", "четырнадцать", "пятнадцать",
-            "шестнадцать", "семнадцать", "восемнадцать", "девятнадцать" };
+    private static String[] TEENS = { "десять", "одиннадцать", "двенадцать", "тринадцать", "четырнадцать",
+            "пятнадцать", "шестнадцать", "семнадцать", "восемнадцать", "девятнадцать" };
 
     private static String[] TENS = { "двадцать", "тридцать", "сорок", "пятьдесят", "шестьдесят", "семьдесят",
             "восемьдесят", "девяносто" };
@@ -177,7 +181,9 @@ public class Numerals {
                 }
 
                 if (thousand != null) {
-                    res.add(morph(n, thousand.plurals));
+                    if (n != 0) {
+                        res.add(morph(n, thousand.plurals));
+                    }
                 } else if (genderFr == null) {
                     String whole = morph(n, pluralsWh);
                     res.add(whole.isEmpty() ? WHOLE : whole);
@@ -233,7 +239,9 @@ public class Numerals {
                 }
 
                 if (thousand != null) {
-                    res.add(morph(n, thousand.plurals));
+                    if (n != 0) {
+                        res.add(morph(n, thousand.plurals));
+                    }
                 } else if (genderFr != null) {
                     res.add(morph(n, pluralsFr));
                 } else {
