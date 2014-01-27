@@ -76,9 +76,13 @@ public class Numerals {
             new Thousand(Gender.M, new String[] { "миллиард", "миллиарда", "миллиардов" }),
             new Thousand(Gender.M, new String[] { "триллион", "триллиона", "триллионов" }) };
 
-    private static String[] FRACTIONS = { "десятых", "сотых", "тысячных", "десятитысячных", "стотысячных",
-            "миллионных", "десятимиллионных", "стомиллионных", "миллиардных", "десятимиллиардных", "стомиллиардных",
-            "триллионных" };
+    private static String[][] FRACTIONS = { { "десятая", "десятых", "десятых" }, { "сотая", "сотых", "сотых" },
+            { "тысячная", "тысячных", "тысячных" }, { "десятитысячная", "десятитысячных", "десятитысячных" },
+            { "стотысячная", "стотысячных", "стотысячных" }, { "миллионная", "миллионных", "миллионных" },
+            { "десятимиллионная", "десятимиллионных", "десятимиллионных" },
+            { "стомиллионная", "стомиллионных", "стомиллионных" }, { "миллиардная", "миллиардных", "миллиардных" },
+            { "десятимиллиардная", "десятимиллиардных", "десятимиллиардных" },
+            { "стомиллиардная", "стомиллиардных", "стомиллиардных" }, { "триллионная", "триллионных", "триллионных" } };
 
     public Numerals(Gender gender, String[] plurals) {
         this.genderWh = gender;
@@ -92,6 +96,11 @@ public class Numerals {
         this.pluralsFr = pluralsFr;
     }
 
+    /**
+     * Вернуть сумму прописью, с точностью до копеек
+     * 
+     * @return значение
+     */
     public String unwind(BigDecimal amount) {
         String str = amount.toPlainString();
         if (!str.contains(".")) {
@@ -115,6 +124,12 @@ public class Numerals {
             strWh = strWh.substring(0, end);
         } while (strWh.length() > 0);
         Collections.reverse(wh);
+
+        while (strFr.endsWith("0")) {
+            strFr = strFr.substring(0, strFr.length() - 1);
+        }
+
+        int frIndex = strFr.length() - 1;
 
         // 1232 -> [1, 232]
         ArrayList<String> fr = new ArrayList<>();
@@ -193,7 +208,7 @@ public class Numerals {
             } while (wh.size() > 0);
         }
 
-        if (!fr.get(0).equals("0")) {
+        if (!fr.get(0).isEmpty()) {
             do {
                 String[] ones;
                 Thousand thousand = null;
@@ -223,15 +238,13 @@ public class Numerals {
                 int m = new Integer(w);
 
                 if (m > 19) {
-                    String ten = w.substring(0, 1);
+                    Integer ten = m / 10;
 
-                    res.add(TENS[new Integer(ten) - 2]);
+                    res.add(TENS[ten - 2]);
 
                     w = w.substring(1);
 
-                    m = new Integer(w);
-
-                    res.add(ones[m]);
+                    res.add(ones[m % 10]);
                 } else if (m > 9) {
                     res.add(TEENS[m - 10]);
                 } else {
@@ -245,7 +258,7 @@ public class Numerals {
                 } else if (genderFr != null) {
                     res.add(morph(n, pluralsFr));
                 } else {
-                    res.add(FRACTIONS[moi[1].length() - 1]);
+                    res.add(morph(n, FRACTIONS[frIndex]));
                 }
             } while (fr.size() > 0);
         }
@@ -262,6 +275,20 @@ public class Numerals {
         return sb.toString();
     }
 
+    /**
+     * Склоняем словоформу
+     * 
+     * @param count
+     *            Long количество объектов
+     * @param ff1
+     *            String вариант словоформы для одного объекта
+     * @param ff2
+     *            String вариант словоформы для двух объектов
+     * @param ff5
+     *            String вариант словоформы для пяти объектов
+     * @return String правильный вариант словоформы для указанного количества
+     *         объектов
+     */
     public static String morph(long count, String... pl) {
         if ((count % 10 == 1) && (count % 100 != 11)) {
             return pl[0];
